@@ -8,6 +8,10 @@ class Book(models.Model):
         unique=True,
     )
 
+    def __str__(self):
+        return f'{self.title} ({self.id})'
+
+
 class BookPage(models.Model):
     book = models.ForeignKey(
         Book,
@@ -21,3 +25,6 @@ class BookPage(models.Model):
     body = models.TextField(
         name='body',
     )
+
+    def __str__(self):
+        return f'{self.title} ({self.id})'
