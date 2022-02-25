@@ -28,3 +28,22 @@ class BookPage(models.Model):
 
     def __str__(self):
         return f'{self.title} ({self.id})'
+
+
+class PageLink(models.Model):
+    from_page = models.ForeignKey(
+        BookPage,
+        on_delete=models.CASCADE,
+    )
+
+    to_page = models.ForeignKey(
+        BookPage,
+        related_name='to_page',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return f'{self.from_page.title} U+1F812 ({self.id})'
+
+    class Meta:
+        unique_together = ['from_page', 'to_page']
