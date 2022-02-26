@@ -11,7 +11,7 @@
     <ul>
         {% for link in page.pagelink_set.all %}
         <li>
-            <a href="../page/{{ link.to_page.id }}">{{ link.name }}</a>
+            <a href="{% url 'page' page.book.id link.to_page.id %}">{{ link.name }}</a>
         </li>
         {% endfor %}
     </ul>

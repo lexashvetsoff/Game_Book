@@ -11,7 +11,7 @@
     <ul>
         {% for page in book.bookpage_set.all %}
         <li>
-            <a href="/book/{{book.id}}/page/{{ page.id }}">{{page.title}}</a>
+            <a href="{% url 'page' book.id page.id %}">{{page.title}}</a>
         </li>
         {% endfor %}
     </ul>
