@@ -42,6 +42,8 @@ class PageLink(models.Model):
         on_delete=models.CASCADE,
     )
 
+    name = models.TextField()
+
     def __str__(self):
         return f'{self.from_page.title} U+1F812 ({self.id})'
 
