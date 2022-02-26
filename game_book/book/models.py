@@ -45,7 +45,7 @@ class PageLink(models.Model):
     name = models.TextField()
 
     def __str__(self):
-        return f'{self.from_page.title} U+1F812 ({self.id})'
+        return f'{self.from_page.title} -> {self.to_page.title} ({self.id})'
 
     class Meta:
         unique_together = ['from_page', 'to_page']
