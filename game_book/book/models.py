@@ -8,6 +8,13 @@ class Book(models.Model):
         unique=True,
     )
 
+    first_page = models.ForeignKey(
+        'BookPage',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='first_page'
+    )
+
     def __str__(self):
         return f'{self.title} ({self.id})'
 
