@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,6 +12,9 @@
         {% for book in books %}
         <li>
             <a href="book/{{book.id}}">{{book.title}}</a>
+            {% if book.cover_art %}
+                <img src="{{ book.cover_art.url }}" alt="cover_art">
+            {% endif %}
         </li>
         {% endfor %}
     </ul>

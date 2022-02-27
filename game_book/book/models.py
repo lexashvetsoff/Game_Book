@@ -12,7 +12,12 @@ class Book(models.Model):
         'BookPage',
         null=True,
         on_delete=models.SET_NULL,
-        related_name='first_page'
+        related_name='first_page',
+    )
+
+    cover_art = models.ImageField(
+        upload_to='uploads/',
+        null=True,
     )
 
     def __str__(self):
