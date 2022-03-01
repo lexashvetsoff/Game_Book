@@ -14,7 +14,7 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-## Запуск бота
+## Запуск сайта
 Для запуска сайта введите
 ```
 python manage.py runserver
