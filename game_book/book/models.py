@@ -16,7 +16,7 @@ class Book(models.Model):
     )
 
     cover_art = models.ImageField(
-        upload_to='uploads/',
+        # upload_to='uploads/',
         null=True,
     )
 
