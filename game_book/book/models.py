@@ -78,6 +78,8 @@ class BookProgress(models.Model):
         on_delete=models.CASCADE
     )
 
+    items = models.ManyToManyField('book.Item')
+
     class Meta:
         unique_together = ['user', 'book']
     
@@ -86,3 +88,7 @@ class BookProgress(models.Model):
         progress = BookProgress(user=user, book=book, book_page=book.first_page)
         progress.save()
         return progress
+
+
+class Item(models.Model):
+    name = models.TextField()

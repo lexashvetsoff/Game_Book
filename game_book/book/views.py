@@ -33,13 +33,17 @@ def page(request, book_id, page_id):
     # query = models.BookProgress.objects.filter(book=book_id, user=request.user, book_page=page_id)
     # if not query:
     #     return redirect(reverse('book', kwargs={'book_id': book_id}))
+    try:
+        progress = models.BookProgress.objects.get(book=book_id, user=request.user)
+    except models.BookProgress.DoesNotExist:
+        return redirect(reverse('book', kwargs={'book_id': book_id}))
 
-    models.BookProgress.objects.filter(
-        book=book_id, user=request.user
-    ).update(
-        book_page=page_id
-    )
+    page = get_object_or_404(models.BookPage, book__id=book_id, id=page_id,)
+
+    progress.book_page = page
+    progress.save()
 
     return render(request, 'page.html', context={
-        'page': get_object_or_404(models.BookPage, book__id=book_id, id=page_id,),
+        'page': page,
+        'items': progress.items.all(),
     })
