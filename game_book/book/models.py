@@ -37,7 +37,7 @@ class BookPage(models.Model):
         name='body',
     )
 
-    items = models.ManyToManyField('book.Item')
+    items = models.ManyToManyField('book.Item', blank=True)
 
     def __str__(self):
         return f'{self.title} ({self.id})'
@@ -57,11 +57,16 @@ class PageLink(models.Model):
 
     name = models.TextField()
 
-    def __str__(self):
-        return f'{self.from_page.title} -> {self.to_page.title} ({self.id})'
+    items = models.ManyToManyField('book.Item', blank=True)
 
     class Meta:
         unique_together = ['from_page', 'to_page']
+
+    def __str__(self):
+        return f'{self.from_page.title} -> {self.to_page.title} ({self.id})'
+
+    def has_all_needed(self, items):
+        return all(i in items for i in self.items.all())
 
 
 class BookProgress(models.Model):
@@ -80,7 +85,7 @@ class BookProgress(models.Model):
         on_delete=models.CASCADE
     )
 
-    items = models.ManyToManyField('book.Item')
+    items = models.ManyToManyField('book.Item', blank=True)
 
     class Meta:
         unique_together = ['user', 'book']

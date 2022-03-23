@@ -22,9 +22,13 @@
 
     <h3>Куда податься?</h3>
     <ul>
-        {% for link in page.pagelink_set.all %}
+        {% for link, passable in links %}
         <li>
-            <a href="{% url 'page' page.book.id link.to_page.id %}">{{ link.name }}</a>
+            {% if passable %}
+                <a href="{% url 'page' page.book.id link.to_page.id %}">{{ link.name }}</a>
+            {% else %}
+                {{ link.name }}
+            {% endif %}
         </li>
         {% endfor %}
     </ul>

@@ -1,3 +1,4 @@
+from os import link
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
@@ -41,19 +42,20 @@ def book(request, book_id):
 
 @on_progress
 def page(request, progress, book_id, page_id):
-    # Защита от взлома - доделать надо
-    # query = models.BookProgress.objects.filter(book=book_id, user=request.user, book_page=page_id)
-    # if not query:
-    #     return redirect(reverse('book', kwargs={'book_id': book_id}))
-
     page = get_object_or_404(models.BookPage, book__id=book_id, id=page_id,)
 
     progress.book_page = page
     progress.save()
 
+    links = [
+        (link, link.has_all_needed(list(progress.items.all())))
+        for link in page.pagelink_set.all()
+    ]
+
     return render(request, 'page.html', context={
         'page': page,
         'progress': progress,
+        'links': links,
         'page_items': page.items.exclude(id__in=progress.items.only('id')),
     })
 
