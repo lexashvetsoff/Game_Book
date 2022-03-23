@@ -1,8 +1,8 @@
-from unicodedata import name
+from pyexpat import model
 from django.db import models
+from django.contrib.auth.models import User
 
 class Book(models.Model):
-    '''Interactive function'''
     title = models.TextField(
         name='title',
         unique=True,
@@ -16,7 +16,6 @@ class Book(models.Model):
     )
 
     cover_art = models.ImageField(
-        # upload_to='uploads/',
         null=True,
     )
 
@@ -61,3 +60,29 @@ class PageLink(models.Model):
 
     class Meta:
         unique_together = ['from_page', 'to_page']
+
+
+class BookProgress(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE
+    )
+
+    book_page = models.ForeignKey(
+        BookPage,
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        unique_together = ['user', 'book']
+    
+    @classmethod
+    def start_reading(cls, user, book):
+        progress = BookProgress(user=user, book=book, book_page=book.first_page)
+        progress.save()
+        return progress
