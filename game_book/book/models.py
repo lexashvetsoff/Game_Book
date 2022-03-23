@@ -37,6 +37,8 @@ class BookPage(models.Model):
         name='body',
     )
 
+    items = models.ManyToManyField('book.Item')
+
     def __str__(self):
         return f'{self.title} ({self.id})'
 
@@ -92,3 +94,6 @@ class BookProgress(models.Model):
 
 class Item(models.Model):
     name = models.TextField()
+
+    def __str__(self):
+        return f'{self.name}'
