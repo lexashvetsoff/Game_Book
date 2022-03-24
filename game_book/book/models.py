@@ -3,8 +3,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Book(models.Model):
-    title = models.TextField(
+    title = models.CharField(
         name='title',
+        max_length=100,
         unique=True,
     )
 
@@ -29,8 +30,9 @@ class BookPage(models.Model):
         on_delete=models.CASCADE,
     )
 
-    title = models.TextField(
+    title = models.CharField(
         name='title',
+        max_length=100,
     )
 
     body = models.TextField(
