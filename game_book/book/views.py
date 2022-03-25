@@ -1,11 +1,17 @@
-from os import link
+from functools import wraps
+from turtle import shape
+
+from graphviz import Digraph
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.http import FileResponse
 
 from game_book.book import models
 
 
 def on_progress(view):
+    @wraps(view)
     def inner(request, book_id, **kwargs):
         try:
             progress = models.BookProgress.objects.get(book=book_id, user=request.user)
@@ -69,3 +75,33 @@ def take(request, progress, book_id, page_id, item_id):
     return redirect(reverse('page', kwargs={
         'book_id': book_id, 'page_id': page_id
     }))
+
+
+def view_book_map(request, book_id):
+    book = get_object_or_404(models.Book, id=book_id)
+
+    g = Digraph('Map', filename='map.gv', directory='/tmp')
+
+    def pid(page):
+        return f'page_{page.id}'
+    
+    for page in book.bookpage_set.all():
+        g.node(pid(page), label='\n'.join(
+            [str(page.id), page.title] + [
+                i.name for i in page.items.all()
+            ]),
+            tooltip=page.body,
+            href=f'/admin/book/bookpage/{page.id}/change',
+        )
+
+    for link in models.PageLink.objects.filter(from_page__book_id=book_id).all():
+        g.edge(pid(link.from_page), pid(link.to_page), label='\n'.join(
+            [str(link.id), link.name[:10]] + [
+                i.name for i in link.items.all()
+            ]),
+            labeltooltip=link.name,
+            labelhref=f'/admin/book/pagelink/{link.id}/change',
+        )
+    
+    g.render(quiet=True, view=False, format='svg')
+    return FileResponse(open('/tmp/map.gv.svg', 'rb'))
